@@ -1,3 +1,7 @@
 <svg>
-    <rect *ngFor="let item of data; index as idx"  [attr.x]="idx * 50" [attr.y]="250 - item" width=50 [attr.height]="item"></rect>
+    <rect *ngFor="let item of data; index as idx"
+      [attr.x]="idx * width"
+      [attr.y]="250 - item"
+      [attr.width]="width"
+      [attr.height]="item"></rect>
 </svg>

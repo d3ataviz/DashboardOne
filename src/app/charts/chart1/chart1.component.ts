@@ -8,6 +8,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 export class Chart1Component implements OnInit {
 
   data = [125, 100, 50, 75, 200, 60];
+  width = 80;
 
   constructor() {
    }

@@ -1,11 +1,11 @@
 import { Component, OnInit, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-chart1',
-  templateUrl: './chart1.component.html',
-  styleUrls: ['./chart1.component.scss']
+  selector: 'app-chart2',
+  templateUrl: './chart2.component.html',
+  styleUrls: ['./chart2.component.scss']
 })
-export class Chart1Component implements OnInit, OnChanges {
+export class Chart2Component implements OnInit, OnChanges {
 
   @Input() data;
   xlabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
@@ -49,11 +49,12 @@ export class Chart1Component implements OnInit, OnChanges {
   }
 
   setParams() {
-    this.rectWidth = (this.innerWidth - 2 * this.outerPadding) / this.data.length;
+    const data = this.data || [100];
+    this.rectWidth = (this.innerWidth - 2 * this.outerPadding) / data.length;
     this.bandwidth = this.bandwidthCoef * this.rectWidth;
     this.padding = (1 - this.bandwidthCoef) * this.rectWidth;
 
-    this.max = 1.3 * Math.max(...this.data); // 1.3 = 130%
+    this.max = 1.3 * Math.max(...data.map((item) => item.employee_salary)); // 1.3 = 130%
   }
 
 }

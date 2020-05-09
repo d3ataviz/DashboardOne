@@ -40,11 +40,10 @@ export class Chart1Component implements OnInit, OnChanges {
     this.innerHeight = this.dimensions.height - this.top - this.bottom;
 
     this.setParams();
-    console.log(svg, svg.getBoundingClientRect());
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
+
     this.setParams();
   }
 

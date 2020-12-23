@@ -28,6 +28,12 @@ export class Chart3Component implements OnInit, OnChanges {
   x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.2);
   y = d3.scaleLinear();
 
+  showFullData = true;
+
+  get filteredData() {
+    return this.showFullData ? this.data : this.data.filter((d, i) => i < 12);
+  }
+
   constructor(element: ElementRef) {
     this.host = d3.select(element.nativeElement);
 
@@ -35,7 +41,13 @@ export class Chart3Component implements OnInit, OnChanges {
    }
 
   ngOnInit() {
-    this.svg = this.host.select('svg');
+    this.svg = this.host.select('svg').on('click', () => {
+      this.showFullData = !this.showFullData;
+      this.setParams();
+      this.setAxis();
+      this.setLabels();
+      this.draw();
+    });
 
     this.setDimensions();
 
@@ -92,20 +104,29 @@ export class Chart3Component implements OnInit, OnChanges {
   }
 
   setParams() {
-    const ids = this.data.map((d) => d.id);
+    const ids = this.filteredData.map((d) => d.id);
     this.x.domain(ids).range([0, this.innerWidth]);
     const max_salary = 1.3 * Math.max(...this.data.map((item) => item.employee_salary));
     this.y.domain([0, max_salary]).range([this.innerHeight, 0]);
   }
 
   draw() {
-    this.dataContainer.selectAll('rect')
-    .data(this.data || [], (d) => d.id)
-    .enter().append('rect')
+    // bind the data
+    const bars = this.dataContainer.selectAll('rect')
+    .data(this.filteredData || [], (d) => d.id);
+
+    // modify existing bars
+
+    // append new bars
+    bars.enter().append('rect')
+    .merge(bars)
     .attr('x', (d) => this.x(d.id))
     .attr('width', this.x.bandwidth())
     .attr('y', (d) => this.y(d.employee_salary))
     .attr('height', (d) => this.innerHeight - this.y(d.employee_salary));
+
+    // exit - remove unused bars
+    bars.exit().remove();
   }
 
 }

@@ -28,10 +28,12 @@ export class Chart3Component implements OnInit, OnChanges {
   x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.2);
   y = d3.scaleLinear();
 
-  showFullData = true;
+  sortedBySalary = false;
 
-  get filteredData() {
-    return this.showFullData ? this.data : this.data.filter((d, i) => i < 12);
+  get sortedData() {
+    return this.sortedBySalary
+    ? this.data.sort((a, b) => +b.employee_salary - +a.employee_salary)
+    : this.data.sort((a, b) => a.employee_name < b.employee_name ? -1 : 1);
   }
 
   constructor(element: ElementRef) {
@@ -42,7 +44,7 @@ export class Chart3Component implements OnInit, OnChanges {
 
   ngOnInit() {
     this.svg = this.host.select('svg').on('click', () => {
-      this.showFullData = !this.showFullData;
+      this.sortedBySalary = !this.sortedBySalary;
       this.setParams();
       this.setAxis();
       this.setLabels();
@@ -104,7 +106,7 @@ export class Chart3Component implements OnInit, OnChanges {
   }
 
   setParams() {
-    const ids = this.filteredData.map((d) => d.id);
+    const ids = this.sortedData.map((d) => d.id);
     this.x.domain(ids).range([0, this.innerWidth]);
     const max_salary = 1.3 * Math.max(...this.data.map((item) => item.employee_salary));
     this.y.domain([0, max_salary]).range([this.innerHeight, 0]);
@@ -113,7 +115,7 @@ export class Chart3Component implements OnInit, OnChanges {
   draw() {
     // bind the data
     const bars = this.dataContainer.selectAll('rect')
-    .data(this.filteredData || [], (d) => d.id);
+    .data(this.sortedData || [], (d) => d.id);
 
     // modify existing bars
 

@@ -125,6 +125,9 @@ export class Chart3Component implements OnInit, OnChanges {
 
     bars.enter().append('rect')
     .merge(bars)
+    .transition()
+    .duration(1000)
+    .delay((d, i) => 30 * i)
     .attr('x', (d) => this.x(d.id))
     .attr('width', this.x.bandwidth())
     .attr('y', (d) => this.y(d.employee_salary))
